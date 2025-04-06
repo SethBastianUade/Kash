@@ -30,8 +30,8 @@ UADE-Pay/ KASH
 │   ├── cuenta_service.py   # Lógica de cuentas bancarias
 │   ├── transaccion_service.py  # Lógica de transferencias
 │── data/
-│   ├── usuario_repository.py  # Manejo de archivos para usuarios
-│   ├── transaccion_repository.py  # Manejo de archivos para transacciones
+│   ├── cuentas.txt  # Repositorio de las cuentas de usuario
+│   ├── bancos.txt  # Repositorio de los bancos existentes
 │── utils/
 │   ├── helpers.py  # Funciones auxiliares como generación de códigos únicos
 │── main.py  # Ejecuta la aplicación
