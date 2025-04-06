@@ -22,7 +22,7 @@ Fase |	Características incluidas
 
 
 
-UADE-Pay/
+UADE-Pay/ KASH
 │── ui/
 │   ├── app.py  # Punto de entrada, interfaz de usuario
 │── services/
