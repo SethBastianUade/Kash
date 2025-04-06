@@ -1,0 +1,3 @@
+seth:100000
+sebas:5000
+hoffman:5000
