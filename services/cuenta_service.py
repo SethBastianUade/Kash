@@ -46,12 +46,60 @@ def vincular_cuenta(usuario):
     
     print(f"\n✅ Cuenta de {banco_encontrado} vinculada exitosamente!\n")
 
-def mostrar_cuentas(usuario):
-    """Muestra las cuentas bancarias vinculadas del usuario."""
+"""def mostrar_cuentas(usuario):
+    #Muestra las cuentas bancarias vinculadas del usuario.
     if not os.path.exists(accounts_file):
         print("\n⚠️ No hay cuentas registradas aún.\n")
         return
+    """
+from functools import reduce
+
+def mostrar_cuentas(usuario):
+   # Muestra las cuentas vinculadas de los usuarios.
     
+    # Lee las cuentas desde el txt
+    with open(accounts_file, "r", encoding="utf-8") as f:
+        cuentas = [
+            tuple(line.strip().split("|"))
+            for line in f
+            if "|" in line
+        ]
+
+    # Filtrar las cuentas del usuario
+    user_accounts = list(filter(lambda c: c[0] == usuario, cuentas))
+
+    # Acá utilizamos el desempaquetado para obtener los datos
+    alias_bancos = [(alias, banco) for (_, banco, _, alias) in user_accounts]
+
+    # Map para crear strings de presentación
+    user_bank_account = list(map(
+        lambda tupla: f"🏦 {tupla[1]} - CBU: {tupla[2]} - Alias: {tupla[3]}",user_accounts))
+
+    # Ordena alfabéticamente por banco
+    detalles_sorted = sorted(user_bank_account, key=lambda s: s.split(" ")[1])
+
+    #  Utilzamos slice para mostrar las últimas 5 cuentas
+    ultimas = detalles_sorted[-5:]
+
+    # reduce para contar cuántas cuentas tiene el usuario
+    cuenta_count = reduce(lambda acc, _: acc + 1, user_accounts, 0)
+
+    # 8) Matriz de datos bancarios (lista de listas)
+    #    cada fila: [banco, cbu, alias]
+    matriz = [list(c[1:]) for c in user_accounts]
+
+    #  Impresiones por consola la info
+    print(f"\n🔢 Total de cuentas vinculadas: {cuenta_count}")
+
+    print("\n📊 Matriz de cuentas (Banco, CBU, Alias):")
+    for fila in matriz:
+        print(fila)
+
+    print("\n📋 Detalles de las últimas cuentas (ordenadas):")
+    for det in ultimas:
+        print(det)
+
+
     print(f"\n💳 Cuentas vinculadas de {usuario}:")
     with open(accounts_file, "r") as f:
         for line in f:

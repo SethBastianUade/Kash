@@ -42,6 +42,7 @@ def registrar_usuario():
     print("\n✅ Registro exitoso. Ahora puede iniciar sesión.\n")
     print("✅ Su saldo actual es:", saldo_service.obtener_saldo(username), "\n")
 
+
 def iniciar_sesion():
     """Permite a un usuario iniciar sesión."""
     username = input("Ingrese su nombre de usuario: ")
@@ -61,3 +62,4 @@ def iniciar_sesion():
     
     print("\n❌ Usuario o contraseña incorrectos.\n")
     return None
+

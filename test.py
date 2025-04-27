@@ -1,7 +1,7 @@
 import os
-from services import cuenta_service, usuario_service, saldo_service
+from services import cuenta_service, usuario_service, saldo_service, transference_service
 
-# Directorio donde se guardaran los datos
+# Directorio de donde se guardaran los datos
 data_dir = "data"
 users_file = os.path.join(data_dir, "usuarios.txt")
 accounts_file = os.path.join(data_dir, "cuentas.txt")
@@ -23,8 +23,9 @@ def main():
         print("3. Cerrar sesión")
         print("4. Vincular cuenta bancaria")
         print("5. Mostrar cuentas bancarias")
-        print("6. Consultar saldo")
-        print("7. Salir")
+        print("6. Realizar transferencia")
+        print("7. Consultar saldo")
+        print("8. Salir")
         opcion = input("Seleccione una opción: ")
         
         if opcion == "1":
@@ -44,9 +45,17 @@ def main():
             else:
                 print("\n⚠️ Debe iniciar sesión primero.\n")
         elif opcion == "6":
-            saldo_service.obtener_saldo(usuario_actual)
+            if usuario_actual:
+                usuario_destino = input("Ingrese el usuario de destino: ")
+                usuario_origen = usuario_actual
+                monto = int(input("Ingrese el monto a transferir: "))
+                transference_service.realizar_transferencia(usuario_origen, usuario_destino, monto)
+            else:
+                print("\n⚠️ Debe iniciar sesión primero.\n")
         elif opcion == "7":
-            print("\n👋 Gracias por usar UADE-Pay!\n")
+            saldo_service.obtener_saldo(usuario_actual)
+        elif opcion == "8":
+            print("\n👋 Gracias por usar Kash!\n")
             break
         else:
             print("\n⚠️ Opción inválida. Intente nuevamente.\n")
