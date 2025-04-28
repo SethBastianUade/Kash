@@ -1,4 +1,5 @@
 import os
+from functools import reduce
 data_dir = "data"
 
 users_file = os.path.join(data_dir, "usuarios.txt")
@@ -52,12 +53,12 @@ def vincular_cuenta(usuario):
         print("\n⚠️ No hay cuentas registradas aún.\n")
         return
     """
-from functools import reduce
 
+#Funcion modificada para realizar los temas vistos en clase
 def mostrar_cuentas(usuario):
    # Muestra las cuentas vinculadas de los usuarios.
     
-    # Lee las cuentas desde el txt
+    # Lee las cuentas desde el txt cuentas.txt y crea una lista de tuplas
     with open(accounts_file, "r", encoding="utf-8") as f:
         cuentas = [
             tuple(line.strip().split("|"))
@@ -65,30 +66,28 @@ def mostrar_cuentas(usuario):
             if "|" in line
         ]
 
-    # Filtrar las cuentas del usuario
+    # Utilizamos comprension de listas y la funcion filter para filtrar las cuentas del usuario y la convertimos en una lista
     user_accounts = list(filter(lambda c: c[0] == usuario, cuentas))
 
     # Acá utilizamos el desempaquetado para obtener los datos
     alias_bancos = [(alias, banco) for (_, banco, _, alias) in user_accounts]
 
     # Map para crear strings de presentación
-    user_bank_account = list(map(
-        lambda tupla: f"🏦 {tupla[1]} - CBU: {tupla[2]} - Alias: {tupla[3]}",user_accounts))
+    user_bank_account = list(map(lambda tupla: f"🏦 {tupla[1]} - CBU: {tupla[2]} - Alias: {tupla[3]}",user_accounts))
 
     # Ordena alfabéticamente por banco
     detalles_sorted = sorted(user_bank_account, key=lambda s: s.split(" ")[1])
 
-    #  Utilzamos slice para mostrar las últimas 5 cuentas
+    # Utilzamos slice para mostrar las últimas 5 cuentas
     ultimas = detalles_sorted[-5:]
 
-    # reduce para contar cuántas cuentas tiene el usuario
+    # Reduce para contar cuántas cuentas tiene el usuario reduce(funcion, iterable, valor inicial)
     cuenta_count = reduce(lambda acc, _: acc + 1, user_accounts, 0)
 
-    # 8) Matriz de datos bancarios (lista de listas)
-    #    cada fila: [banco, cbu, alias]
+    # Matriz de datos bancarios (lista de listas) queda cada fila: [banco, cbu, alias]
     matriz = [list(c[1:]) for c in user_accounts]
 
-    #  Impresiones por consola la info
+    # Muestra por consola la info
     print(f"\n🔢 Total de cuentas vinculadas: {cuenta_count}")
 
     print("\n📊 Matriz de cuentas (Banco, CBU, Alias):")
@@ -98,7 +97,6 @@ def mostrar_cuentas(usuario):
     print("\n📋 Detalles de las últimas cuentas (ordenadas):")
     for det in ultimas:
         print(det)
-
 
     print(f"\n💳 Cuentas vinculadas de {usuario}:")
     with open(accounts_file, "r") as f:

@@ -6,13 +6,13 @@ users_file = os.path.join(data_dir, "usuarios.txt")
 
 #Modulo que gestione el inicio de sesion y el registro de usuarios
 
-
+# Funcion para hashear la contraseña del usuario utilizando SHA256 de la librearia hashlib
 def hash_password(password):
-    """Devuelve el hash SHA256 de una contraseña."""
+    # Devuelve el hash SHA256 de una contraseña
     return hashlib.sha256(password.encode()).hexdigest()
 
 def registrar_usuario():
-    """Registra un nuevo usuario."""
+    # Registra un nuevo usuario
     username = input("Ingrese un nombre de usuario: ")
     password = input("Ingrese una contraseña: ")
     hashed_password = hash_password(password)
@@ -35,7 +35,7 @@ def registrar_usuario():
                     print("\n⚠️ Usuario ya registrado. Pruebe con otro nombre.\n")
                     return
                 
-    # Guardar usuario en el archivo
+    # Guardar el usuario y la contraseña encriptada en el archivo
     with open(users_file, "a") as f:
         f.write(f"{username}|{hashed_password}\n")
     
@@ -44,7 +44,7 @@ def registrar_usuario():
 
 
 def iniciar_sesion():
-    """Permite a un usuario iniciar sesión."""
+    #Permite a un usuario iniciar sesión
     username = input("Ingrese su nombre de usuario: ")
     password = input("Ingrese su contraseña: ")
     hashed_password = hash_password(password)
@@ -53,6 +53,7 @@ def iniciar_sesion():
         print("\n⚠️ No hay usuarios registrados aún.\n")
         return None
     
+    # Abre el archivo de usuarios y verifica que el usuario y la contraseña coincidan
     with open(users_file, "r") as f:
         for line in f:
             stored_user, stored_hash = line.strip().split("|")

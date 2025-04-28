@@ -33,3 +33,4 @@ UADE-Pay/
 │── utils/
 │   ├── helpers.py  # Funciones auxiliares como generación de códigos únicos
 │── main.py  # Ejecuta la aplicación
+
