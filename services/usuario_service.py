@@ -53,7 +53,7 @@ def iniciar_sesion():
         print("\n⚠️ No hay usuarios registrados aún.\n")
         return None
     
-    # Abre el archivo de usuarios y verifica que el usuario y la contraseña coincidan
+    # Abre el archivo de usuarios y verifica que el usuario y la contraseña
     with open(users_file, "r") as f:
         for line in f:
             stored_user, stored_hash = line.strip().split("|")
