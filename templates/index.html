@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Kash - Inicio{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="display-4">Bienvenido a Kash</h1>
+    <p class="lead">Tu plataforma de pagos y transferencias</p>
+    
+    {% if not session.usuario %}
+    <div class="mt-4">
+        <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg me-2">Iniciar Sesión</a>
+        <a href="{{ url_for('registro') }}" class="btn btn-outline-primary btn-lg">Registrarse</a>
+    </div>
+    {% else %}
+    <div class="mt-4">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg">Ir al Dashboard</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 
