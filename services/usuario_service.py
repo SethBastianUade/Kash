@@ -64,3 +64,26 @@ def iniciar_sesion():
     print("\n❌ Usuario o contraseña incorrectos.\n")
     return None
 
+def verificar_usuario(username, password):
+    """
+    Verifica las credenciales de un usuario para el login web.
+    Retorna un diccionario con la información del usuario si las credenciales son correctas,
+    o None si son incorrectas.
+    """
+    if not os.path.exists(users_file):
+        return None
+    
+    hashed_password = hash_password(password)
+    
+    with open(users_file, "r") as f:
+        for line in f:
+            stored_user, stored_hash = line.strip().split("|")
+            if stored_user == username and stored_hash == hashed_password:
+                return {
+                    'id': username,  # Usando username como ID por ahora
+                    'username': username,
+                    'nombre': username  # Por ahora usamos el username como nombre
+                }
+    
+    return None
+
