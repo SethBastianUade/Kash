@@ -1,5 +1,5 @@
 import os
-from services import cuenta_service, usuario_service, saldo_service, transference_service
+from services import cuenta_service, usuario_service, saldo_service, transference_service, qr_service
 
 # Directorio de donde se guardaran los datos
 data_dir = "data"
@@ -25,7 +25,9 @@ def main():
         print("5. Mostrar cuentas bancarias")
         print("6. Realizar transferencia")
         print("7. Consultar saldo")
-        print("8. Salir")
+        print("8. Generar código QR para recibir pago")
+        print("9. Escanear código QR para pagar")
+        print("10. Salir")
         opcion = input("Seleccione una opción: ")
         
         if opcion == "1":
@@ -53,11 +55,39 @@ def main():
             else:
                 print("\n⚠️ Debe iniciar sesión primero.\n")
         elif opcion == "7":
-            saldo_service.obtener_saldo(usuario_actual)
+            if usuario_actual:
+                saldo_service.obtener_saldo(usuario_actual)
+            else:
+                print("\n⚠️ Debe iniciar sesión primero.\n")
         elif opcion == "8":
+            if usuario_actual:
+                monto = input("Ingrese el monto a recibir (opcional, presione Enter para omitir): ")
+                monto = float(monto) if monto else None
+                qr_path = qr_service.generar_qr_pago(usuario_actual, monto)
+                print(f"\n✅ Código QR generado exitosamente en: {qr_path}\n")
+            else:
+                print("\n⚠️ Debe iniciar sesión primero.\n")
+        elif opcion == "9":
+            if usuario_actual:
+                imagen_path = input("Ingrese la ruta de la imagen del código QR: ")
+                qr_data = qr_service.leer_qr_pago(imagen_path)
+                if qr_data:
+                    print(f"\n📱 Datos del QR:")
+                    print(f"Usuario destino: {qr_data['usuario']}")
+                    print(f"Monto: {qr_data['monto'] if qr_data['monto'] else 'A definir'}")
+                    confirmar = input("\n¿Desea realizar el pago? (s/n): ")
+                    if confirmar.lower() == 's':
+                        monto = float(input("Ingrese el monto a transferir: ")) if not qr_data['monto'] else qr_data['monto']
+                        transference_service.realizar_transferencia(usuario_actual, qr_data['usuario'], monto)
+                else:
+                    print("\n❌ No se pudo leer el código QR.\n")
+            else:
+                print("\n⚠️ Debe iniciar sesión primero.\n")
+        elif opcion == "10":
             print("\n👋 Gracias por usar Kash!\n")
             break
         else:
             print("\n⚠️ Opción inválida. Intente nuevamente.\n")
 
-main()
+if __name__ == "__main__":
+    main()

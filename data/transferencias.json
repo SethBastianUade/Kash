@@ -1,0 +1,44 @@
+[
+  {
+    "codigo": "RC-e38dee61",
+    "origen": "seth",
+    "destino": "sebas",
+    "monto": 0.0
+  },
+  {
+    "codigo": "RC-bba5c6ab",
+    "origen": "seth",
+    "destino": "sebas",
+    "monto": 10000.0
+  },
+  {
+    "codigo": "RC-244f80f9",
+    "origen": "sebas",
+    "destino": "hoffman",
+    "monto": 1000.0
+  },
+  {
+    "codigo": "RC-1b643f11",
+    "origen": "sebas",
+    "destino": "seth",
+    "monto": 121.0
+  },
+  {
+    "codigo": "RC-c09cb851",
+    "origen": "sebas",
+    "destino": "seth",
+    "monto": 121.0
+  },
+  {
+    "codigo": "RC-7a23b33c",
+    "origen": "sebas",
+    "destino": "seth",
+    "monto": 1234.0
+  },
+  {
+    "codigo": "RC-56d78606",
+    "origen": "agustin",
+    "destino": "sebas",
+    "monto": 1.0
+  }
+]

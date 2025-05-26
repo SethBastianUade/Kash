@@ -1,3 +1,0 @@
-seth:90000.0
-sebas:15000.0
-hoffman:5000

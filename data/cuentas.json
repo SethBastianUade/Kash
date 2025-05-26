@@ -1,0 +1,22 @@
+[
+  {
+    "usuario": "seth",
+    "banco": "Santander",
+    "cbu": "0720000000000000000000",
+    "alias": "seth.santander"
+  },
+  {
+    "usuario": "sebas",
+    "banco": "BBVA",
+    "cbu": "0170000000000000000000",
+    "alias": "sebas.bbva",
+    "principal": true
+  },
+  {
+    "usuario": "sebas",
+    "banco": "Santander",
+    "cbu": "0720000000000000000000",
+    "alias": "sebas.santander",
+    "principal": false
+  }
+]

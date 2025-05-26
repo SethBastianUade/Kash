@@ -1,2 +1,0 @@
-seth|Santander|0720000000000000000000|seth.santander
-sebas|BBVA|0170000000000000000000|sebas.bbva

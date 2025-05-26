@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Transferencias{% endblock %}
+{% block content %}
+<h2>Transferencias</h2>
+{% if mensaje %}
+    <div class="alert alert-info">{{ mensaje }}</div>
+{% endif %}
+<form method="POST" class="mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+            <label for="destino" class="form-label">Usuario destino</label>
+            <input type="text" class="form-control" id="destino" name="destino" required>
+        </div>
+        <div class="col-md-3">
+            <label for="monto" class="form-label">Monto</label>
+            <input type="number" class="form-control" id="monto" name="monto" min="1" required>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Transferir</button>
+        </div>
+    </div>
+</form>
+<h4>Historial</h4>
+{% if transferencias and transferencias|length > 0 %}
+    <table class="table table-striped mt-2">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Origen</th>
+                <th>Destino</th>
+                <th>Monto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in transferencias %}
+            <tr>
+                <td>{{ t.codigo }}</td>
+                <td>{{ t.origen }}</td>
+                <td>{{ t.destino }}</td>
+                <td>${{ t.monto }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay transferencias registradas.</p>
+{% endif %}
+{% endblock %} 

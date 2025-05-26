@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Mis Cuentas{% endblock %}
+{% block content %}
+<h2>Mis Cuentas</h2>
+{% if mensaje %}
+    <div class="alert alert-info">{{ mensaje }}</div>
+{% endif %}
+
+<h4>Agregar nueva cuenta</h4>
+<form method="POST" class="mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-5">
+            <label for="cbu" class="form-label">CBU</label>
+            <input type="text" class="form-control" id="cbu" name="cbu" required maxlength="22" minlength="22">
+        </div>
+        <div class="col-md-5">
+            <label for="alias" class="form-label">Alias</label>
+            <input type="text" class="form-control" id="alias" name="alias" required>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Agregar</button>
+        </div>
+    </div>
+</form>
+
+<h4>Cuentas vinculadas</h4>
+{% if cuentas and cuentas|length > 0 %}
+    <form method="POST">
+    <table class="table table-striped mt-2">
+        <thead>
+            <tr>
+                <th>Banco</th>
+                <th>CBU</th>
+                <th>Alias</th>
+                <th>Principal</th>
+                <th>Seleccionar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cuenta in cuentas %}
+            <tr {% if cuenta.principal %}class="table-primary"{% endif %}>
+                <td>{{ cuenta.banco }}</td>
+                <td>{{ cuenta.cbu }}</td>
+                <td>{{ cuenta.alias }}</td>
+                <td>{% if cuenta.principal %}<span class="badge bg-primary">Principal</span>{% endif %}</td>
+                <td>
+                    <input type="radio" name="principal_cbu" value="{{ cuenta.cbu }}" {% if cuenta.principal %}checked{% endif %}>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-outline-primary">Establecer como principal</button>
+    </form>
+{% else %}
+    <p>No tienes cuentas vinculadas.</p>
+{% endif %}
+{% endblock %} 

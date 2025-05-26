@@ -1,38 +1,75 @@
 {% extends "base.html" %}
 
-{% block title %}Kash - Dashboard{% endblock %}
+{% block title %}Dashboard - Kash{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h2>Dashboard</h2>
-        <div class="card mb-4">
-            <div class="card-header">
-                <h4>Bienvenido, {{ session.usuario.nombre }}</h4>
+<div class="container">
+    <h2 class="mb-4">¡Hola, {{ current_user.username }}!</h2>
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card balance-card fade-in h-100">
+                <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                    <h5 class="card-title">Balance Total</h5>
+                    <h2 class="card-text" id="balance-amount">${{ saldo }}</h2>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card">
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card fade-in h-100">
+                <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                    <h5 class="card-title">Transferencias</h5>
+                    <a href="{{ url_for('transferencias') }}" class="btn btn-primary w-100">Ir a Transferencias</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card fade-in h-100">
+                <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                    <h5 class="card-title">Escanear QR</h5>
+                    <a href="{{ url_for('qr') }}" class="btn btn-outline-primary w-100">Escanear QR</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card fade-in">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Promociones Bancarias</h5>
+                    <div class="d-flex flex-row flex-nowrap overflow-auto gap-3">
+                        <div class="promo-card card text-center flex-shrink-0" style="width: 200px;">
+                            <img src="{{ url_for('static', filename='promoSantander.png') }}" class="card-img-top p-3" style="height: 80px; object-fit: contain;" alt="Santander">
                             <div class="card-body">
-                                <h5 class="card-title">Saldo</h5>
-                                <p class="card-text">$0.00</p>
+                                <div class="promo-percent">20% OFF</div>
+                                <div class="promo-desc">Pagando tu cuota UADE con Santander</div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
+                        <div class="promo-card card text-center flex-shrink-0" style="width: 200px;">
+                            <img src="{{ url_for('static', filename='promoBBVA.jpg') }}" class="card-img-top p-3" style="height: 80px; object-fit: contain;" alt="BBVA">
                             <div class="card-body">
-                                <h5 class="card-title">Transferencias</h5>
-                                <p class="card-text">0 transferencias</p>
+                                <div class="promo-percent">15% OFF</div>
+                                <div class="promo-desc">En librerías y libros seleccionados</div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card">
+                        <div class="promo-card card text-center flex-shrink-0" style="width: 200px;">
+                            <img src="{{ url_for('static', filename='promoGalicia.jpg') }}" class="card-img-top p-3" style="height: 80px; object-fit: contain;" alt="Galicia">
                             <div class="card-body">
-                                <h5 class="card-title">Cuentas</h5>
-                                <p class="card-text">0 cuentas vinculadas</p>
+                                <div class="promo-percent">20% OFF</div>
+                                <div class="promo-desc">En supermercados los miércoles</div>
+                            </div>
+                        </div>
+                        <div class="promo-card card text-center flex-shrink-0" style="width: 200px;">
+                            <img src="{{ url_for('static', filename='promoMacro.jpg') }}" class="card-img-top p-3" style="height: 80px; object-fit: contain;" alt="Macro">
+                            <div class="card-body">
+                                <div class="promo-percent">25% OFF</div>
+                                <div class="promo-desc">En farmacias los lunes</div>
+                            </div>
+                        </div>
+                        <div class="promo-card card text-center flex-shrink-0" style="width: 200px;">
+                            <img src="{{ url_for('static', filename='promoNacion.jpg') }}" class="card-img-top p-3" style="height: 80px; object-fit: contain;" alt="Nación">
+                            <div class="card-body">
+                                <div class="promo-percent">10% OFF</div>
+                                <div class="promo-desc">En combustibles los fines de semana</div>
                             </div>
                         </div>
                     </div>
@@ -40,5 +77,72 @@
             </div>
         </div>
     </div>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card fade-in">
+                <div class="card-body text-center">
+                    <h5 class="card-title">¡Ganá $2000 recomendando Kash!</h5>
+                    <p>Compartí tu usuario como referido. Cuando un amigo se registre y te ponga como referido, ambos ganan <b>$2000</b> extra en saldo inicial.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Payment Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Pago</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Deseas realizar un pago a <span id="payment-user"></span>?</p>
+                <p>Monto: $<span id="payment-amount"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="confirmPayment()">Confirmar Pago</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Actualizar la última actualización
+    document.getElementById('last-update').textContent = new Date().toLocaleString();
+    
+    // Función para confirmar pago
+    function confirmPayment() {
+        const amount = document.getElementById('payment-amount').textContent;
+        const user = document.getElementById('payment-user').textContent;
+        // Aquí iría la lógica para procesar el pago
+        alert('Pago procesado correctamente');
+        bootstrap.Modal.getInstance(document.getElementById('paymentModal')).hide();
+    }
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.promo-card {
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    min-width: 200px;
+    background: #fff;
+    margin-bottom: 0;
+}
+.promo-percent {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+.promo-desc {
+    font-size: 1rem;
+    color: #333;
+}
+</style>
 {% endblock %} 
