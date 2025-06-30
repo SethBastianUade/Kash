@@ -22,7 +22,15 @@
 <hr>
 <h2>Escanear QR</h2>
 <div id="qr-mobile-section" style="display:none;">
-    <div id="reader" style="width: 100%; max-width: 350px; margin: 0 auto;"></div>
+    <div class="text-center mb-3">
+        <button id="start-scanner" class="btn btn-primary">
+            <i class="fas fa-camera"></i> Iniciar Escáner
+        </button>
+        <button id="stop-scanner" class="btn btn-danger" style="display:none;">
+            <i class="fas fa-stop"></i> Detener Escáner
+        </button>
+    </div>
+    <div id="interactive" class="viewport" style="width: 100%; max-width: 350px; margin: 0 auto;"></div>
     <div id="qr-result" class="alert alert-info mt-3" style="display:none;"></div>
 </div>
 <div id="qr-desktop-section" class="alert alert-warning" style="display:none;">
@@ -34,43 +42,83 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 <script>
 function isMobile() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
+
 window.addEventListener('DOMContentLoaded', function() {
     if (isMobile()) {
         document.getElementById('qr-mobile-section').style.display = '';
         document.getElementById('qr-desktop-section').style.display = 'none';
+        
+        const startBtn = document.getElementById('start-scanner');
+        const stopBtn = document.getElementById('stop-scanner');
         const qrResult = document.getElementById('qr-result');
-        const html5QrCode = new Html5Qrcode("reader");
-        Html5Qrcode.getCameras().then(cameras => {
-            if (cameras && cameras.length) {
-                html5QrCode.start(
-                    cameras[0].id,
-                    {
-                        fps: 10,
-                        qrbox: 250
-                    },
-                    qrCodeMessage => {
-                        qrResult.style.display = '';
-                        qrResult.textContent = 'QR leído: ' + qrCodeMessage;
-                        html5QrCode.stop();
-                    },
-                    errorMessage => {
-                        // No mostrar errores menores
-                    }
-                );
-            }
-        }).catch(err => {
-            qrResult.style.display = '';
-            qrResult.textContent = 'No se pudo acceder a la cámara.';
+        
+        startBtn.addEventListener('click', function() {
+            startScanner();
+            startBtn.style.display = 'none';
+            stopBtn.style.display = 'inline-block';
         });
+        
+        stopBtn.addEventListener('click', function() {
+            Quagga.stop();
+            startBtn.style.display = 'inline-block';
+            stopBtn.style.display = 'none';
+        });
+        
+        function startScanner() {
+            Quagga.init({
+                inputStream: {
+                    name: "Live",
+                    type: "LiveStream",
+                    target: "#interactive",
+                    constraints: {
+                        width: { min: 640 },
+                        height: { min: 480 },
+                        facingMode: "environment", // Esto fuerza la cámara trasera
+                        aspectRatio: { min: 1, max: 2 }
+                    },
+                },
+                locator: {
+                    patchSize: "medium",
+                    halfSample: true
+                },
+                numOfWorkers: 2,
+                frequency: 10,
+                decoder: {
+                    readers: [
+                        {
+                            format: "qr_code",
+                            config: {}
+                        }
+                    ]
+                },
+                locate: true
+            }, function(err) {
+                if (err) {
+                    qrResult.style.display = '';
+                    qrResult.textContent = 'Error al iniciar la cámara: ' + err.message;
+                    return;
+                }
+                Quagga.start();
+            });
+            
+            Quagga.onDetected(function(result) {
+                const code = result.codeResult.code;
+                qrResult.style.display = '';
+                qrResult.textContent = 'QR detectado: ' + code;
+                Quagga.stop();
+                startBtn.style.display = 'inline-block';
+                stopBtn.style.display = 'none';
+            });
+        }
     } else {
         document.getElementById('qr-mobile-section').style.display = 'none';
         document.getElementById('qr-desktop-section').style.display = '';
     }
 });
 </script>
-{% endblock %} 
+{% endblock %}
