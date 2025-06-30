@@ -7,7 +7,7 @@ from services.cuenta_service import marcar_principal, cargar_bancos
 from services.qr_service import generar_qr_pago, leer_qr_pago
 from werkzeug.utils import secure_filename
 
-app = Flask(__name__)
+app = Flask(_name_)
 app.secret_key = 'clave_cookies'  # clave de la session
 
 # Configuración de Flask-Login
@@ -23,7 +23,7 @@ bancos_file = os.path.join(data_dir, "bancos.json")
 
 # Modelo de usuario para Flask-Login
 class User(UserMixin):
-    def __init__(self, username):
+    def _init_(self, username):
         self.id = username
         self.username = username
 
@@ -73,10 +73,14 @@ def registro():
             json.dump(users, f, indent=2)
         # Asignar saldo inicial según referido
         if referido:
-            saldo_service.asignar_saldo_inicial(username, True, referido)
+            success, mensaje = saldo_service.asignar_saldo_inicial(username, True, referido)
+            if not success:
+                flash(f'Registro exitoso. {mensaje}', 'warning')
+            else:
+                flash('Registro exitoso con saldo de referido', 'success')
         else:
             saldo_service.asignar_saldo_inicial(username, False)
-        flash('Registro exitoso', 'success')
+            flash('Registro exitoso', 'success')
         return redirect(url_for('login'))
     return render_template('registro.html')
 
@@ -254,5 +258,5 @@ def cuentas():
         pass
     return render_template('cuentas.html', cuentas=cuentas, mensaje=mensaje)
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000) 
+if _name_ == '_main_':
+    app.run(debug=True, host='0.0.0.0', port=5000)
